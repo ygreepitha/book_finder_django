@@ -1,0 +1,49 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<img src="{% static 'img/logo.png' %}" alt="logo">
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Book Finder</title>
+    <style>
+        body{font-family: Arial, sans-serif; background:#f7f8fa; margin:32px;}
+        .container{max-width:900px;margin:0 auto;}
+        header{display:flex;align-items:center;gap:16px;}
+        form input[type=text]{padding:8px;width:320px;border:1px solid #ccc;border-radius:4px;}
+        form button{padding:8px 12px;border:none;background:#007bff;color:#fff;border-radius:4px;cursor:pointer;}
+        .book{background:#fff;padding:12px;margin:12px 0;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.08);}
+        .meta{color:#555;font-size:0.9rem;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📚 Book Finder</h1>
+    </header>
+
+    <form method="post" action=".">
+        {% csrf_token %}
+        <input type="text" name="query" placeholder="Enter book title or author" value="{{ query }}" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <div id="results">
+        {% if books %}
+            <p>Showing {{ books|length }} results:</p>
+            {% for b in books %}
+            <div class="book">
+                <h3>{{ b.title }}</h3>
+                <p class="meta"><strong>Author:</strong> {{ b.authors }} | <a href="{{ b.info_link }}" target="_blank">More</a></p>
+                <p>{{ b.description }}{% if b.description %}...{% endif %}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No results yet. Try searching for a book.</p>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
